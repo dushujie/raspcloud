@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>RaspCloud|意见建议</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8">
+<!-- Bootstrap -->
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link href="/css/bootstrap-responsive.css" rel="stylesheet">
+<style type="text/css">
+body{
+    background-color: #d3cfa3;
+}
+
+.header-text{
+    text-align: center;
+    color: #295a00;
+    margin: 10px;
+}
+
+.main-area{
+    left: 20%;
+    right: 20%;
+    background-color: #ebe6af;
+    position: absolute;
+    box-shadow: 0px 0px 20px #fff;
+    padding: 50px;
+}
+
+.message-input-div{
+    margin: 20px;
+}
+</style>
+</head>
+
+<body>
+<div class="main-area">
+    <h2 class="header-text">意见建议</h2>
+    <button class="btn btn-default" onclick="history.back()">←返回</button>
+    <div class="input-group" style="margin: 20px;">
+      <span class="input-group-addon">您的姓名*</span>
+      <input type="text" class="form-control" placeholder="姓名" id="name">
+      <span class="input-group-addon">E-mail*</span>
+      <input type="email" class="form-control" placeholder="E-mail" id="email">
+    </div>
+    <div class="message-input-div">
+        <h5>内容*</h5>
+      <textarea class="form-control" rows="10" id="message"></textarea>
+    </div>
+    <button class="btn btn-success" style="margin:20px;" id="submit">提交</button>
+    <button class="btn btn-default" style="margin:20px;" id="cancle">重置</button>
+</div>
+</body>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="/js/jquery-2.1.0.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+$("#cancle").click(function(){
+    $("#name").val("");
+    $("#email").val("");
+    $("#message").val("");
+});
+
+$("#submit").click(function(){
+    var name=$("#name").val();
+    var email=$("#email").val();
+    var message=$("#message").val();
+    if(name==""||email==""||message=="")
+        alert("带*的项不能为空！");
+    else
+        $.post("/main/sendmessage/",{"name":name,"email":email,"message":message},function(data){
+            alert(data);
+        });
+});
+</script>

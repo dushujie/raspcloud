@@ -1,0 +1,57 @@
+@charset "utf-8";
+/* CSS Document */
+.toolbox{
+    width:17px;
+    height:17px;
+    margin:4px;
+}
+.upload_div{
+    position:fixed;
+    left:40%;
+    top:30%;
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius:10px;
+}
+.upload_div_background{
+    visibility: hidden;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.newfolder_div{
+    position:fixed;
+    left:20%;
+    top:30%;
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius:10px;
+    width: 500px;
+    height: 180px;
+}
+
+.fileshare_div{
+    position:fixed;
+    left:20%;
+    top:20%;
+    background-color: #ecf0f1;
+    padding: 40px; 
+    border-radius:10px;
+    width: 500px;
+}
+
+.offline_div{
+    position:fixed;
+    left:20%;
+    top:30%;
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius:10px;
+    width: 500px;
+    height: 180px;
+}
+

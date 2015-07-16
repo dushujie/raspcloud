@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset=utf-8 />
+    <title>RaspCloud|离线下载</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/css/bootstrap-responsive.min.css" rel="stylesheet" />
+    <link href="/css/offline.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="main-area">
+      <h2 class="header-text">离线下载</h2>
+      <div class="input-group" style="margin: 20px">
+        <span class="input-group-btn"><button class="btn btn-default" onclick="history.back()">←返回</button></span>
+        <input type="text" class="form-control" placeholder="HTTP/磁力链接" id="url-input">
+        <span class="input-group-btn"><button id="add-download" class="btn btn-success">添加</button></span>
+      </div>
+      <div class="btn-group" id="select-path" style="margin: 20px">
+        <span style="float: left;font-size: 20px">保存路径:</span>
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="select-btn">
+          {{username}}<span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          {% for item in first_file_list %}
+          <li><a onclick='select_path(this);'>{{item.filename}}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <table class="table" style="margin: 20px" id="download-table">
+        <tbody>
+          <tr>
+            <th>状态</th>
+            <th>文件名</th>
+            <th>进度</th>
+            <th>大小</th>
+            <th>速度</th>
+            <th>路径</th>
+            <th>操作</th>
+          </tr>
+        </tbody>
+      </table>
+      <div class="btn-group">
+        <button type="button" class="btn btn-default" onclick="remove_completed_download()">清空已完成</button>
+        <button type="button" class="btn btn-default" onclick="pause_all()">全部暂停</button>
+        <button type="button" class="btn btn-default" onclick="unpause_all()">全部开始</button>
+      </div>
+    </div>
+  </body>
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="/js/jquery-2.1.0.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/offline.js"></script>
+
+
+</html>
+

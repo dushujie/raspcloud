@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>RaspCloud|账户信息</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8">
+<!-- Bootstrap -->
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link href="/css/bootstrap-responsive.css" rel="stylesheet">
+<style type="text/css">
+body{
+    background-color: #d3cfa3;
+}
+
+.header-text{
+    text-align: center;
+    color: #111;
+    margin: 30px;
+}
+
+.main-area{
+    left: 20%;
+    right: 20%;
+    bottom: 0px;
+    top: 0px;
+    background-color: #ebe6af;
+    position: absolute;
+    box-shadow: 0px 0px 20px #fff;
+    padding: 50px;
+}
+
+#input-div{
+    left: 25%;
+    right: 25%;
+    position: absolute;
+}
+
+.input-area{
+    margin-top: 30px;
+    margin-left: 30px;
+}
+
+.room-used{
+    text-align: center;
+    color: #111;
+    left: 25%;
+    right: 25%;
+    position: absolute;
+}
+
+</style>
+</head>
+<body>
+<div class="main-area">
+    <h2 class="header-text">基本信息</h2>
+    <div id="input-div">
+        <div class="input-group input-area">
+            <span class="input-group-addon">用户名</span>
+            <input type="text" class="form-control" readonly="readonly" value="{{username}}">
+        </div>
+        <div class="input-group input-area">
+            <span class="input-group-addon">输入原密码</span>
+            <input type="password" class="form-control" id="orig_password">
+        </div>
+        <div class="input-group input-area">
+            <span class="input-group-addon">输入新密码</span>
+            <input type="password" class="form-control" id="new_password_1">
+        </div>
+        <div class="input-group input-area">
+            <span class="input-group-addon">再输入一次</span>
+            <input type="password" class="form-control" id="new_password_2">
+            <span class="input-group-btn">
+                <button class="btn btn-success" type="button" id="change">更改</button>
+            </span>
+        </div>
+    </div>
+    <div>
+        <h4 class="room-used"><small>已使用空间:{{room_used}}</small></h4>
+    </div>
+    <button class="btn btn-default" onclick="history.back()">←返回</button>
+</div>
+</body>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="/js/jquery-2.1.0.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.metadata.js"></script>
+
+<script type="text/javascript">
+$("#change").click(function(){
+    if($("#orig_password").val()==""||$("#new_password_1").val()==""||$("#new_password_2").val()=="")
+        alert("密码框不能为空！");
+    else if($("#new_password_1").val()!=$("#new_password_2").val())
+        alert("新密码不一致！");
+    else{
+        $.post("changepassword/",
+            {"orig_pwd":$("#orig_password").val(),"new_pwd":$("#new_password_1").val()},
+            function(data){
+                alert(data);
+                $("#orig_password").val("");
+                $("#new_password_1").val("");
+                $("#new_password_2").val("");
+                $.get("logout/",function(data){
+                    alert("请重新登录");
+                    window.location.href=window.location.href.replace(window.location.pathname,"");
+                });
+            });
+    }
+});
+</script>

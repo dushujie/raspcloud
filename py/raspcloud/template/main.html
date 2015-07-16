@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>RaspCloud</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link href="/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/css/tablecloth.css" rel="stylesheet">
+    <link href="/css/prettify.css" rel="stylesheet"> 
+    <link href="/css/main.css" rel="stylesheet"> 
+    <link href="/css/uploadify.css" rel="stylesheet">
+</head>
+
+<body style="padding-top:50px; background:#d3cfa3; overflow:auto" >
+
+<!-- 导航栏 -->
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation" style="-moz-box-shadow:0px 4px 4px #000; -webkit-box-shadow:0px 4px 4px #000; box-shadow:0px 4px 4px #000;">
+      <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">RaspCloud</a>
+      </div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a data-target="#" id="backhome">回到主目录</a></li>
+          <li class="dropdown">
+            <a data-target="#" class="dropdown-toggle" data-toggle="dropdown">扩展应用<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="offline/">离线下载</a></li>
+              <li><a href="share/">文件共享</a></li>
+              <li><a data-target="#" class="divider"></a></li>
+              <li><a href="chatroom/">留言板</a></li>
+              <li><a data-target="#" class="divider"></a></li>
+              <li><a data-target="#">客户端下载</a></li>
+            </ul>
+          </li>
+        </ul>
+         <!--<form class="navbar-form navbar-left" role="search">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="搜索您的文件">
+          </div>
+          <button type="submit" class="btn btn-success">搜索</button>
+        </form>-->
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a data-target="#" class="dropdown-toggle" data-toggle="dropdown">更多<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="message/">意见建议</a></li>
+              <li class="divider"></li>
+              <li><a href="about/">关于</a></li>
+            </ul>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+        	<a data-target="#" class="navbar-text">|</a>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a data-target="#" class="dropdown-toggle" data-toggle="dropdown">账户<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a data-target="#" href="userinfo/">基本信息</a></li>
+              <li><a data-target="#" id="logout">退出登录</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!--导航栏结束-->
+    
+    <!--当前路径-->
+    <div style="position:absolute; top:100px; font-size:20px; left:10%; color:rgba(102,102,102,1); font-family:'微软雅黑'" id="cur_path">
+      当前路径:{{current_path}}
+    </div>
+    <!--当前路径结束-->
+    
+    <!--工具栏开始-->
+    <div style="position:absolute; left: 70%; top: 110px; border-radius: 8px; box-shadow: 3px 3px 2px #888888; background-color: #64a8d1; padding-left: 10px; padding-bottom: 3px; padding-right: 10px; padding-top: 3px; font-style: inherit; font-weight: bold; color: #fff673; border-style: outset;" id="upload">
+      上 传
+    </div>
+    <div style="position:absolute; left:75%; top:110px; background-color:rgba(204,204,204,0.5); padding:5px; border-radius: 8px; box-shadow: 3px 3px 2px #888888;">
+        <img src="/img/plus.svg" title="新建文件夹" class="toolbox" id="new_button"/>
+        <img src="/img/refresh.svg" title="刷新" class="toolbox" id="refresh_button"/>
+        <img src="/img/remove.svg" title="删除" class="toolbox" id="delete_button"/>
+        <img src="/img/share.svg" title="共享" class="toolbox" id="share_button"/>
+    </div>
+    <!--工具栏结束-->
+    
+    <!--以下显示文件列表-->
+    <div style="position:absolute; top:160px; left:10%; right:10%;">
+		<table id="file_list" style="box-shadow:0px 0px 20px #fff;">
+          <tr>
+              <th width="50px" id="selectall" style="cursor:pointer;">全选</th>
+              <th>文件名</th>
+              <th>类型</th>
+              <th>大小</th>
+              <th>修改时间</th>
+          </tr>
+        	{% for item in info %}
+          <tr>
+            <td><input type="checkbox" value='{{item.filename}}'></td>
+            <td><a href="#" style="color: #EEE" filename="{{item.filename}}">{{item.filename}}</a></td>
+            <td>{{item.kind}}</td>
+            <td>
+              {% if item.filesize %}
+              {{item.filesize}}
+              {% endif %}
+            </td>
+            <td>{{item.changetime}}</td>
+          </tr>
+	{% endfor %}
+        </table>
+    </div>
+    <!--文件列表结束-->
+
+    <!--上传框开始-->
+    <div class="upload_div_background" id="upload_div">
+      <img title="关闭" src="/img/close.svg" style="position: absolute; top: 70px; right: 20px; width: 30px; height: 32px;" onclick='$("#upload_div").css("visibility","hidden");$("#refresh_button").click();'/>
+      <div class="upload_div">
+        <input type="file" name="file_upload" id="file_upload" value="{% csrf_token %}">
+        <button class="btn btn-success" type="button" onclick="javascript:$('#file_upload').uploadify('upload','*')">开始上传</button>
+      </div>
+    </div>
+    <!--上传框结束-->
+
+    <!--新建文件夹开始-->
+    <div class="upload_div_background" id="newfolder_div">
+      <img title="关闭" src="/img/close.svg" style="position: absolute; top: 70px; right: 20px; width: 30px; height: 32px;" onclick='$("#newfolder_div").css("visibility","hidden");'/>
+      <div class="newfolder_div" id="newfolder">
+        <h4>新建文件夹</h4>
+        <div class="input-group">
+          <span class="input-group-addon">文件名：</span>
+          <input type="text" class="form-control" id="newfolder_name" onclick='$("#name_null_notice").css("display","none")' onkeyup="value=value.replace(/[\W]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))">
+          <span class="input-group-btn"><button class="btn btn-success" type="button" id="newfolder_button" title="新建文件夹">+</button></span>
+        </div>
+        <h6><small>文件夹名称只能为字母与数字的组合</small></h6>
+        <h6 style="display:none;" id="name_null_notice"><small>文件夹名称不能为空</small></h6>
+      </div>
+    </div>
+    <!--新建文件夹结束-->
+
+    <!--分享框开始-->
+    <div class="upload_div_background" id="fileshare_div">
+      <img title="关闭" src="/img/close.svg" style="position: absolute; top: 70px; right: 20px; width: 30px; height: 32px;" onclick='$("#fileshare_div").css("visibility","hidden");$("#filesharelist").children().remove();'/>
+      <div class="fileshare_div">
+        <h4>确定分享以下的文件（文件夹）吗？</h4>
+        <h5><small>分享后其他用户将可以下载这些文件</small></h5>
+        <ul id="filesharelist"></ul>
+        <div>
+          <button id="suretoshare" class="btn btn-success">确定</button>
+          <button id="cancelshare" class="btn btn-warning">取消</button>
+        </div>
+      </div>
+    </div>
+    <!--分享框结束-->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/js/jquery-2.1.0.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.metadata.js"></script>
+    <script src="/js/jquery.tablesorter.min.js"></script>
+    <script src="/js/jquery.tablecloth.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/jquery.uploadify.min.js"></script>
+    
+    <script type="text/javascript" charset="utf-8">
+      $(document).ready(function() {
+        $("table").tablecloth({
+          theme: "dark",
+          striped: true,
+          sortable: true,
+          bordered: false,
+        });
+        //绑定事件
+        bind_objects();
+      });
+      $('#file_upload').uploadify({
+        'swf'      : '/img/uploadify.swf',
+        'uploader' : 'uploadfile/',
+        'method': 'post',
+        // Put your options here
+        'buttonText':'选择文件',
+        'auto': false,
+        'width': 150,
+        'onSelect':select_file,
+      });
+    </script>
+</body>
+
+</html>
